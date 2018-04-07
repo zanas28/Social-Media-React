@@ -21,7 +21,7 @@ class Post extends Component {
         // console.log(this.state.images);
     }
 
-    getPosts() {
+    getPosts = () => {
         fetch('https://jsonplaceholder.typicode.com/posts')
         .then(res => res.json())
         .then(data => {
@@ -29,7 +29,7 @@ class Post extends Component {
         })
     }
 
-    getImages() {
+    getImages = () => {
         fetch('https://jsonplaceholder.typicode.com/photos')
         .then(res => res.json())
         .then(imgs => {
@@ -37,10 +37,11 @@ class Post extends Component {
         })
     }
 
-    deleteData(item) {
-        return fetch(`https://jsonplaceholder.typicode.com/posts/${item}`, {
-            method: 'DELETE'
-        })
+    deleteData = (item) => {
+        // return fetch(`https://jsonplaceholder.typicode.com/posts/${item}`, {
+        //     method: 'DELETE'
+        // })
+        console.log(`this is ${item}`)
     }
 
     render() {

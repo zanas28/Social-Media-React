@@ -9,7 +9,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
 }
 
 .buttonTest {
@@ -21,4 +20,8 @@
 .list-post {
     width: 50%;
     min-height: 350px;
+}
+
+.input-form {
+    width: 50%;
 }
