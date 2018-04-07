@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
-import { List, Avatar, Button, Spin } from 'antd';
+import { List, Avatar, Button, Spin, Modal, Form, Input } from 'antd';
 
-import reqwest from 'reqwest';
+const FormItem = Form.Item;
+const { TextArea } = Input;
+const confirm = Modal.confirm;
+
+import PostForm from './PostForm';
 
 class Post extends Component {
 
@@ -11,12 +15,31 @@ class Post extends Component {
             loading: true,
             loadingMore: false,
             showLoadingMore: true,
+            visible: false,
             posts: [],
             images: []
         }
     }
 
-    componentDidMount() {
+    showDeleteConfirm = () => {
+        confirm({
+          title: 'Are you sure delete this post?',
+          okText: 'Yes',
+          okType: 'danger',
+          cancelText: 'No',
+          onOk(id) {
+            console.log('OK');
+            fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+                method: 'DELETE'
+            })
+          },
+          onCancel() {
+            console.log('Cancel');
+          },
+        });
+      }
+
+    componentWillMount() {
         this.getPosts();
         // console.log(this.state.images);
     }
@@ -29,41 +52,91 @@ class Post extends Component {
         })
     }
 
-    getImages = () => {
-        fetch('https://jsonplaceholder.typicode.com/photos')
-        .then(res => res.json())
-        .then(imgs => {
-            this.setState(({images : imgs}))
+    // getImages = () => {
+    //     fetch('https://jsonplaceholder.typicode.com/photos')
+    //     .then(res => res.json())
+    //     .then(imgs => {
+    //         this.setState(({images : imgs}))
+    //     })
+    // }
+
+    onEdit = (e) => {
+        console.log(`edit ini ${e.target.title}`);
+    }
+
+    showModal = () => {
+        this.setState({
+            visible: true,
+          });
+    }
+
+    onSubmit = (e) => {
+        this.setState({
+            visible: false
         })
     }
 
-    deleteData = (item) => {
-        // return fetch(`https://jsonplaceholder.typicode.com/posts/${item}`, {
-        //     method: 'DELETE'
-        // })
-        console.log(`this is ${item}`)
+    onCancel = (e) => {
+        this.setState({
+            visible: false
+        })
+    }
+
+    handleAddPost = (post) => {
+        let posts = this.state.posts;
+        // console.log(post);
+        posts.unshift(post);
+        this.setState({posts:posts});
     }
 
     render() {
         const { posts, images } = this.state;
 
         return(
-            <List
-                className='list-post'
-                // loading={loading}
-                itemLayout='horizontal'
-                // loadMore={loadMore}
-                dataSource={posts}
-                renderItem={item => (
-                    <List.Item actions={[<a>edit</a>, <a onClick={this.deleteData(item.id)}>Delete</a>]}>
-                        <List.Item.Meta
-                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                            title={<a href="https://ant.design">{item.title}</a>}
-                            description={item.body}
+            <div className='list-post'>
+                <PostForm addPost={this.handleAddPost} style={{width:'50%'}}/>
+                <List
+                    // loading={loading}
+                    itemLayout='horizontal'
+                    // loadMore={loadMore}
+                    dataSource={posts}
+                    renderItem={item => (
+                        <List.Item actions={[<Button onClick={this.showModal}>Edit</Button>, <Button onClick={this.showDeleteConfirm}>Delete</Button>]}>
+                            <List.Item.Meta
+                                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                                title={item.title}
+                                description={item.body}
+                            />
+                        </List.Item>
+                    )}
+                />
+
+                <Modal
+                    title="Edit This Post"
+                    visible={this.state.visible}
+                    onOk={this.onSubmit}
+                    onCancel={this.onCancel}
+                >
+                    <FormItem>
+                        <Input
+                            type='text'
+                            name='title'
+                            value={this.props.title}
+                            onChange={this.onChange}
+                            placeholder='Title'
                         />
-                    </List.Item>
-                )}
-            />
+                    </FormItem>
+                    <FormItem>
+                        <TextArea 
+                            rows={4}
+                            name='body'
+                            onChange= {this.onChange}
+                            value={this.props.body}
+                            placeholder='Your Post'  
+                        />
+                    </FormItem>
+                </Modal>
+            </div>
         )
     }
 }

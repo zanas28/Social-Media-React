@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { Form, Select, Input, Button } from 'antd';
+import PropTypes from 'prop-types';
+
 const FormItem = Form.Item;
-const Option = Select.Option;
 const { TextArea } = Input;
 
 class PostForm extends Component {
@@ -18,7 +19,7 @@ class PostForm extends Component {
     }
 
     onSubmit = (e) => {
-        console.log(`${this.state.title} and ${this.state.body}`)
+        // console.log(`${this.state.title} and ${this.state.body}`)
         const post = {
             title: this.state.title,
             body: this.state.body
@@ -33,14 +34,22 @@ class PostForm extends Component {
             body: JSON.stringify(post)
         })
         .then(res => res.json())
-        .then(data => console.log(data))
+        .then(data => this.setState({
+            title: data.title,
+            body: data.body,
+            id: data.id
+        }, () => {
+            // console.log(this.state);
+            this.props.addPost(this.state);
+        }
+        ))
         
         e.preventDefault();
     }
 
     render() {
         return (
-        <Form onSubmit={this.onSubmit} className = 'input-form'>
+        <Form onSubmit={this.onSubmit}>
             <FormItem>
                 <Input
                     type='text'
@@ -60,11 +69,15 @@ class PostForm extends Component {
                 />
             </FormItem>
             <FormItem>
-                <Button type="primary submit">POST</Button>
+                <Button type="primary" onClick={this.onSubmit}>POST</Button>
             </FormItem>
         </Form>
         );
     }
+}
+
+PostForm.propTypes = {
+    addPost: PropTypes.func
 }
 
 // const WrappedApp = Form.create()(PostForm);

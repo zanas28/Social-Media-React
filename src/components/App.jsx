@@ -13,7 +13,7 @@ class App extends Component {
                 className='app'
             >
                 <h1 className='buttonTest'>Social Media</h1>
-                <PostForm />
+                {/* <PostForm /> */}
                 {/* <br /> */}
                 <Post />
             </div>
