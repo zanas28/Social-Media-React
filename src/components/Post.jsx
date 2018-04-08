@@ -12,24 +12,26 @@ class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
-            loadingMore: false,
-            showLoadingMore: true,
+            // loading: true,
+            // loadingMore: false,
+            // showLoadingMore: true,
             visible: false,
             posts: [],
-            images: []
+            images: [],
+            title: '',
+            body: ''
         }
     }
 
-    showDeleteConfirm = () => {
+    showDeleteConfirm = (id) => {
         confirm({
           title: 'Are you sure delete this post?',
           okText: 'Yes',
           okType: 'danger',
           cancelText: 'No',
-          onOk(id) {
+          onOk() {
             console.log('OK');
-            fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+            fetch(`https://jsonplaceholder.typicode.com/posts/1`, {
                 method: 'DELETE'
             })
           },
@@ -42,6 +44,7 @@ class Post extends Component {
     componentWillMount() {
         this.getPosts();
         // console.log(this.state.images);
+        // this.onDelete();
     }
 
     getPosts = () => {
@@ -64,16 +67,19 @@ class Post extends Component {
         console.log(`edit ini ${e.target.title}`);
     }
 
-    showModal = () => {
+    showModal = (id) => {
         this.setState({
             visible: true,
-          });
+        });
+
+        console.log(id);
     }
 
     onSubmit = (e) => {
         this.setState({
             visible: false
         })
+        console.log('this is on SUBMIT');
     }
 
     onCancel = (e) => {
@@ -89,8 +95,20 @@ class Post extends Component {
         this.setState({posts:posts});
     }
 
+    onChange = (e) => {
+        this.setState({[e.target.name]: e.target.value});
+    }
+
+    // onDelete = (id) => {
+    //     // let idPost = this.state.posts.findIndex(
+
+    //     console.log(id);
+    // }
+
     render() {
-        const { posts, images } = this.state;
+        const { posts} = this.state;
+
+        // console.log(posts.map(post => post.id));
 
         return(
             <div className='list-post'>
@@ -121,7 +139,7 @@ class Post extends Component {
                         <Input
                             type='text'
                             name='title'
-                            value={this.props.title}
+                            value={this.state.title}
                             onChange={this.onChange}
                             placeholder='Title'
                         />
@@ -131,7 +149,7 @@ class Post extends Component {
                             rows={4}
                             name='body'
                             onChange= {this.onChange}
-                            value={this.props.body}
+                            value={this.state.body}
                             placeholder='Your Post'  
                         />
                     </FormItem>
