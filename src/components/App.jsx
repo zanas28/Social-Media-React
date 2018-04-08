@@ -14,7 +14,6 @@ class App extends Component {
             >
                 <h1 className='buttonTest'>Social Media</h1>
                 {/* <PostForm /> */}
-                {/* <br /> */}
                 <Post />
             </div>
         )

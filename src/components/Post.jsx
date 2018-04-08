@@ -23,9 +23,9 @@ class Post extends Component {
         }
     }
 
-    showDeleteConfirm = (id) => {
+    showDeleteConfirm = () => {
         confirm({
-          title: 'Are you sure delete this post?',
+          title: 'Are you sure delete this post ?',
           okText: 'Yes',
           okType: 'danger',
           cancelText: 'No',
@@ -44,7 +44,7 @@ class Post extends Component {
     componentWillMount() {
         this.getPosts();
         // console.log(this.state.images);
-        // this.onDelete();
+        this.getImages();
     }
 
     getPosts = () => {
@@ -55,13 +55,13 @@ class Post extends Component {
         })
     }
 
-    // getImages = () => {
-    //     fetch('https://jsonplaceholder.typicode.com/photos')
-    //     .then(res => res.json())
-    //     .then(imgs => {
-    //         this.setState(({images : imgs}))
-    //     })
-    // }
+    getImages = () => {
+        fetch('https://jsonplaceholder.typicode.com/photos')
+        .then(res => res.json())
+        .then(imgs => {
+            this.setState(({images : imgs}))
+        })
+    }
 
     onEdit = (e) => {
         console.log(`edit ini ${e.target.title}`);
@@ -99,16 +99,27 @@ class Post extends Component {
         this.setState({[e.target.name]: e.target.value});
     }
 
-    // onDelete = (id) => {
-    //     // let idPost = this.state.posts.findIndex(
-
-    //     console.log(id);
-    // }
+    onDelete = () => {
+        fetch(`https://jsonplaceholder.typicode.com/posts/1`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
+    }
 
     render() {
-        const { posts} = this.state;
+        const { posts, images} = this.state;
 
-        // console.log(posts.map(post => post.id));
+        // let showPost = posts.map(post => (
+        //     <div key={post.id}>
+        //         <h3>{post.title}</h3>
+        //         <p>{post.body}</p>
+        //         <div>
+        //             <button onClick={this.onEdit} style={{marginRight:'20px', cursor:'pointer'}}>Edit</button>
+        //             <button onClick={this.onDelete} style={{cursor:'pointer'}}>Delete</button>
+        //         </div>
+        //     </div>
+        // ));
 
         return(
             <div className='list-post'>
@@ -128,6 +139,8 @@ class Post extends Component {
                         </List.Item>
                     )}
                 />
+
+                {/* {showPost} */}
 
                 <Modal
                     title="Edit This Post"

@@ -5,6 +5,6 @@ import App from './components/App.jsx';
 import 'antd/dist/antd.css';
 
 ReactDOM.render(
-    <App name="REACT"/>,
+    <App/>,
     document.getElementById('app')
 )

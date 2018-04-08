@@ -25,3 +25,7 @@
 .input-form {
     width: 50%;
 }
+
+.onButton {
+    cursor: pointer;
+}
